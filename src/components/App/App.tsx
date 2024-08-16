@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import SearchBar from "../SearchBar/SearchBar";
 import ImageGallery from "../ImageGallery/ImageGallery";
@@ -7,37 +8,38 @@ import { fetchImg } from "../gallery-api";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import { animateScroll as scroll } from "react-scroll";
 import ImageModal from "../ImageModal/ImageModal";
+import { Image, OpenModalProps } from "../types";
 
 function App() {
-  const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [images, setImages] = useState([]);
-  const [totalPages, setTotalPages] = useState(1000);
-  const [page, setPage] = useState(1);
-  const [loadMore, setLoadMore] = useState(false);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalAlt, setModalAlt] = useState("");
-  const [modalLikes, setModalLikes] = useState("");
-  const [modalImage, setModalImage] = useState("");
-  const [modalDescription, setModalDescription] = useState("");
+  const [query, setQuery] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [images, setImages] = useState<Image[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(1000);
+  const [page, setPage] = useState<number>(1);
+  const [loadMore, setLoadMore] = useState<boolean>(false);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [modalAlt, setModalAlt] = useState<string>("");
+  const [modalLikes, setModalLikes] = useState<number>(0);
+  const [modalImage, setModalImage] = useState<string>("");
+  const [modalDescription, setModalDescription] = useState<string>("");
 
-  const onSubmit = (newSearch) => {
+  const onSubmit = (newSearch: string) => {
     setQuery(newSearch);
     setImages([]);
     setTotalPages(1000);
     setPage(1);
   };
 
-  function openModal({ regular, alt_description, description, likes }) {
+  function openModal(imageSrc: OpenModalProps) {
     setModalIsOpen(true);
-    setModalImage(regular);
-    setModalAlt(alt_description);
-    setModalDescription(description);
-    setModalLikes(likes);
+    setModalImage(imageSrc.regular);
+    setModalAlt(imageSrc.alt_description);
+    setModalDescription(imageSrc.description);
+    setModalLikes(imageSrc.likes);
   }
 
-  function closeModal() {
+  function closeModal(): void {
     setModalIsOpen(false);
   }
 
@@ -60,7 +62,6 @@ function App() {
         }
       } catch (error) {
         setError(true);
-        console.log(error);
       } finally {
         setLoading(false);
       }
@@ -78,7 +79,7 @@ function App() {
       ) : (
         <>
           <ImageGallery images={images} onClick={openModal} />
-          {loading && <Loader />}
+          {loading && <Loader loading={loading} />}
           {loadMore && !loading && images.length > 0 && (
             <LoadMoreBtn onClick={loadMoreImg} />
           )}
@@ -90,12 +91,11 @@ function App() {
               alt_description={modalAlt}
               likes={modalLikes}
               description={modalDescription}
-            ></ImageModal>
+            />
           )}
         </>
       )}
     </div>
   );
 }
-
 export default App;

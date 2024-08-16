@@ -1,7 +1,12 @@
 import { ThreeDots } from "react-loader-spinner";
 import css from "./Loader.module.css";
+import React, { FC } from "react";
 
-export default function Loader() {
+interface LoaderProps {
+  loading: boolean;
+}
+
+const Loader: FC<LoaderProps> = () => {
   return (
     <div className={css.container}>
       <ThreeDots
@@ -13,8 +18,10 @@ export default function Loader() {
         ariaLabel="three-dots-loading"
         wrapperStyle={{}}
         wrapperClass=""
-        className={css.loader}
+        // className={css.loader}
       />
     </div>
   );
-}
+};
+
+export default Loader;
